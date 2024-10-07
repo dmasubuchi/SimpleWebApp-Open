@@ -1,0 +1,145 @@
+﻿@{
+    ViewData["Title"] = "Simple Web App";
+}
+
+<h2>SQL DB</h2>
+<div>
+    <input type="text" id="sqlKeyword" placeholder="SQL キーワードを追加" />
+    <button onclick="addSqlKeyword()">追加</button>
+</div>
+
+<div>
+    <button onclick="getSqlKeywords()">SQL キーワード一覧表示</button>
+    <ul id="sqlKeywordsList"></ul>
+</div>
+
+<div>
+    <input type="number" id="sqlKeywordID" placeholder="SQL キーワードIDを削除" />
+    <button onclick="deleteSqlKeyword()">削除</button>
+</div>
+
+<hr>
+
+<h2>Cosmos DB</h2>
+<div>
+    <input type="text" id="cosmosKeyword" placeholder="Cosmos キーワードを追加" />
+    <button onclick="addCosmosKeyword()">追加</button>
+</div>
+
+<div>
+    <button onclick="getCosmosKeywords()">Cosmos キーワード一覧表示</button>
+    <ul id="cosmosKeywordsList"></ul>
+</div>
+
+<div>
+    <input type="text" id="cosmosKeywordID" placeholder="Cosmos キーワードIDを削除" />
+    <button onclick="deleteCosmosKeyword()">ID削除</button>
+</div>
+
+<div>
+    <input type="text" id="cosmosKeywordToDelete" placeholder="Cosmos キーワードを削除" />
+    <button onclick="deleteCosmosKeywordByKeyword()">Keyword削除</button>
+</div>
+
+<script>
+    // SQL DB キーワード追加
+    function addSqlKeyword() {
+        const keywordText = document.getElementById('sqlKeyword').value;
+        fetch('/Home/AddSqlKeyword', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: 'keywordText=' + encodeURIComponent(keywordText)
+        }).then(() => {
+            alert('SQL キーワードが追加されました');
+        });
+    }
+
+    // SQL DB キーワード一覧表示
+    function getSqlKeywords() {
+        fetch('/Home/GetSqlKeywords')
+        .then(response => response.json())
+        .then(data => {
+            const ul = document.getElementById('sqlKeywordsList');
+            ul.innerHTML = '';
+            data.forEach(keyword => {
+                const li = document.createElement('li');
+                li.textContent = `ID: ${keyword.keywordID}, Keyword: ${keyword.keywordText}`;
+                ul.appendChild(li);
+            });
+        });
+    }
+
+    // SQL DB キーワード削除
+    function deleteSqlKeyword() {
+        const keywordID = document.getElementById('sqlKeywordID').value;
+        fetch('/Home/DeleteSqlKeyword', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: 'keywordID=' + encodeURIComponent(keywordID)
+        }).then(() => {
+            alert('SQL キーワードが削除されました');
+        });
+    }
+
+    // Cosmos DB キーワード追加
+    function addCosmosKeyword() {
+        const keywordText = document.getElementById('cosmosKeyword').value;
+        fetch('/Home/AddCosmosKeyword', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: 'keywordText=' + encodeURIComponent(keywordText)
+        }).then(() => {
+            alert('Cosmos キーワードが追加されました');
+        });
+    }
+
+    // Cosmos DB キーワード一覧表示
+    function getCosmosKeywords() {
+        fetch('/Home/GetCosmosKeywords')
+        .then(response => response.json())
+        .then(data => {
+            const ul = document.getElementById('cosmosKeywordsList');
+            ul.innerHTML = '';
+            data.forEach(keyword => {
+                const li = document.createElement('li');
+                li.textContent = `ID: ${keyword.id}, Keyword: ${keyword.keyword}`;
+                ul.appendChild(li);
+            });
+        });
+    }
+
+    // Cosmos DB キーワード削除
+    function deleteCosmosKeyword() {
+        const keywordID = document.getElementById('cosmosKeywordID').value;
+        fetch('/Home/DeleteCosmosKeyword', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: 'keywordID=' + encodeURIComponent(keywordID)
+        }).then(() => {
+            alert('Cosmos キーワードが削除されました');
+        });
+    }
+
+    // Cosmos DB キーワード削除 (keyword ベース)
+    function deleteCosmosKeywordByKeyword() {
+        const keywordToDelete = document.getElementById('cosmosKeywordToDelete').value;
+        fetch('/Home/DeleteCosmosKeywordByKeyword', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: 'keyword=' + encodeURIComponent(keywordToDelete)
+        }).then(() => {
+            alert('Cosmos キーワードが削除されました');
+        });
+    }
+
+</script>
